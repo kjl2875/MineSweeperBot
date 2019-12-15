@@ -1,5 +1,11 @@
 package com.MineSweeperBot;
 
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+
 import com.MineSweeperBot.model.Cell;
 import com.MineSweeperBot.model.Field;
 import com.MineSweeperBot.model.Pos;
@@ -8,9 +14,14 @@ public class App
 {
 	public static Field field;
 	
-    public static void main( String[] args )
+    public static void main( String[] args ) throws Exception
     {
     	runDemo();
+    	
+    	// etc - 화면캡쳐
+    	Toolkit toolkit = Toolkit.getDefaultToolkit();
+    	Rectangle rect = new Rectangle(toolkit.getScreenSize());
+    	BufferedImage img = new Robot().createScreenCapture(rect);
     }
 
 	private static void runDemo()
