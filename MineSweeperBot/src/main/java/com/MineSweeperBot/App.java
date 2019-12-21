@@ -1,10 +1,14 @@
 package com.MineSweeperBot;
 
 import java.awt.AWTException;
-import java.awt.Rectangle;
+import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Robot;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import com.MineSweeperBot.model.Cell;
 import com.MineSweeperBot.model.Field;
@@ -13,16 +17,68 @@ import com.MineSweeperBot.model.Pos;
 public class App 
 {
 	public static Field field;
+	public static int cellWidth = 10;
+	public static int cellHeight = 8;
 	
     public static void main( String[] args ) throws Exception
     {
-    	runDemo();
-    	
-    	// etc - 화면캡쳐
-    	Toolkit toolkit = Toolkit.getDefaultToolkit();
-    	Rectangle rect = new Rectangle(toolkit.getScreenSize());
-    	BufferedImage img = new Robot().createScreenCapture(rect);
+//    	runDemo();
+    	catpureDemo();
     }
+
+	
+
+	private static void catpureDemo() throws HeadlessException, IOException, AWTException
+	{
+		File fieldImgFile = new File("res/field.png");
+		BufferedImage fieldImg = ImageIO.read(fieldImgFile);
+		Pair<Integer,Integer> src = getSrc(fieldImgFile);
+    	
+    	if( null == src ) {
+    		throw new IOException("Can not found field");
+    	}
+
+    	System.out.println(src);
+    	
+    	int w = fieldImg.getWidth() / cellWidth;
+    	int h = fieldImg.getHeight() / cellHeight;
+    	for( int y=0; y<cellHeight; y++ )
+    	{
+    		for( int x=0; x<cellWidth; x++ )
+        	{
+    			BufferedImage img = fieldImg.getSubimage(x*w, y*h, w, h);
+    			
+    			if( Util.isSameImage(img, ImageIO.read(new File("res/cell_blank_1.png"))) )
+    			{
+    				// TODO
+    			}
+    			else if( Util.isSameImage(img, ImageIO.read(new File("res/cell_blank_2.png"))) )
+    			{
+    				// TODO
+    			}
+    			else
+    			{
+    				File f = new File(String.format("debug/%d_%d.png", x,y));
+    				ImageIO.write(img, "png", f);
+    				throw new IOException("Unknown cell: " + f.getAbsolutePath());
+    			}
+        	}	
+    	}
+    	
+	}
+
+
+
+	private static Pair<Integer,Integer> getSrc(final File field) throws HeadlessException, IOException, AWTException
+	{
+		BufferedImage catpure = Util.screenCatpure(new Robot(), GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices());
+    	BufferedImage target = ImageIO.read(field);
+    	Pair<Integer,Integer> src = Util.getImageMatchPoint(catpure,target);
+    	
+    	return src;
+	}
+
+
 
 	private static void runDemo()
 	{
@@ -45,7 +101,7 @@ public class App
 		 * */
 		final int width = 3;
 		final int height = 3;
-		field = new Field(width,height);
+		field = new Field(width,height,cellWidth,cellHeight);
         
 		final int centerX = 1;
 		final int centerY = 1;

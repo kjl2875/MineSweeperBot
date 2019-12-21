@@ -8,11 +8,15 @@ public class Field
 	private int height;
 	private int width;
 	private Cell [][]field;
+	private int cell_width;
+	private int cell_height;
 	
-	public Field(final int width, final int height)
+	public Field(final int width, final int height, final int cell_width, final int cell_height)
 	{
 		this.height = height;
 		this.width = width;
+		this.cell_width = cell_width;
+		this.cell_height = cell_height;
 		
 		field = new Cell[this.height][this.width];
 		for(int y=0; y<height; y++) {
@@ -20,6 +24,16 @@ public class Field
 				field[y][x] = new Cell(Cell.TYPE_UNKNOWN,new Pos(x,y));
 			}
 		}
+	}
+	
+	public int getCellWidth()
+	{
+		return cell_width;
+	}
+	
+	public int getCellHeight()
+	{
+		return cell_height;
 	}
 	
 	public int getWidth()
