@@ -2,6 +2,7 @@ package com.MineSweeperBot;
 
 import java.awt.AWTException;
 import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;

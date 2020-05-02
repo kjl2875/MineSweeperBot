@@ -3,10 +3,13 @@ package com.MineSweeperBot;
 import java.awt.AWTException;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
+import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
@@ -23,7 +26,26 @@ public class App
     public static void main( String[] args ) throws Exception
     {
 //    	runDemo();
-    	catpureDemo();
+//    	catpureDemo();
+    	
+    	Robot robot = new Robot();
+    	
+    	Rectangle screenRectangle = ImageProcessor.getFullRectangle();
+    	BufferedImage monitorImage = robot.createScreenCapture(screenRectangle);
+    	BufferedImage screenImage = ImageIO.read(new File("res/screen.png"));
+    	Pair<Integer, Integer> screenOffset = Util.getImageMatchPoint(monitorImage, screenImage);
+    	
+    	if( screenOffset == null )
+    	{
+//    		throw new Exception("Can not found first screen."); // TODO
+    		screenOffset = new Pair<Integer,Integer>(247,357); // DEBUG
+    	}
+    	
+    	Properties prop = new Properties();
+    	prop.load(new FileInputStream(new File("res/config.properties")));
+    	
+    	ImageProcessor imgp = new ImageProcessor( robot, new Rectangle(screenOffset.first,screenOffset.second,screenImage.getWidth(),screenImage.getHeight()), prop );
+    	imgp.updateCells();
     }
 
 	
